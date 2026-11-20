@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asesinados en Gaza</title>
+  <meta name="description" content="Presentación editorial interactiva en un único archivo HTML con encabezado, párrafo narrativo y gráficos." />
+  <meta property="og:title" content="Asesinados en Gaza" />
+  <meta property="og:description" content="Presentación editorial interactiva en un único archivo HTML con encabezado, párrafo narrativo y gráficos." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-canvas: #fbf9f5;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f3efe7;
+      --ink-primary: #1c1917;
+      --ink-secondary: #57534e;
+      --ink-muted: #78716c;
+      --border-strong: #1c1917;
+      --border-subtle: #d6cebe;
+      --accent: #881337;
+      --accent-hover: #6b0f2b;
+      --accent-soft: #f5e8ec;
+      --chart-1: #1c1917;
+      --chart-2: #881337;
+      --chart-3: #78716c;
+      --chart-4: #b45309;
+      --chart-5: #44403c;
+      --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+      --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+      --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-canvas);
+      color: var(--ink-primary);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .page-shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 28px 24px 40px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Título principal centrado */
+    .main-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .main-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2rem, 3.6vw, 3rem);
+      line-height: 1.12;
+      letter-spacing: -0.015em;
+      color: var(--ink-primary);
+      text-wrap: balance;
+    }
+
+    /* Contenedor con flechas laterales */
+    .stage-wrapper {
+      position: relative;
+      padding: 0 64px;
+    }
+
+    .slide-frame {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: opacity 180ms var(--ease-out), transform 180ms var(--ease-out);
+    }
+
+    .slide-frame.is-transitioning {
+      opacity: 0.45;
+      transform: translateY(2px);
+    }
+
+    /* Barra superior: Encabezado */
+    .encabezado-box {
+      background-color: var(--bg-surface);
+      border: 2px solid var(--border-strong);
+      padding: 18px 24px;
+      min-height: 56px;
+    }
+
+    .encabezado-text {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(1.0625rem, 1.45vw, 1.25rem);
+      font-weight: 500;
+      line-height: 1.45;
+      color: var(--ink-primary);
+      text-wrap: pretty;
+    }
+
+    /* Grilla principal: Párrafo (izquierda) + Gráfico (derecha) */
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background-color: var(--bg-surface);
+      border: 2px solid var(--border-strong);
+      padding: 32px;
+      min-height: 460px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Panel izquierdo: Párrafo */
+    .paragraph-panel {
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .paragraph-kicker {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin: 0 0 16px;
+    }
+
+    .paragraph-body {
+      font-family: var(--font-serif);
+      font-size: clamp(1.0625rem, 1.3vw, 1.2rem);
+      line-height: 1.72;
+      color: var(--ink-primary);
+      max-width: 66ch;
+    }
+
+    .paragraph-body p {
+      margin: 0 0 1.15em;
+    }
+
+    .paragraph-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .paragraph-body.has-dropcap p:first-of-type::first-letter {
+      font-family: var(--font-display);
+      font-size: 3.1rem;
+      font-weight: 700;
+      float: left;
+      line-height: 0.85;
+      margin: 4px 10px 0 0;
+      color: var(--accent);
+    }
+
+    .paragraph-footer {
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px 16px;
+      font-size: 0.8125rem;
+      color: var(--ink-secondary);
+    }
+
+    /* Panel derecho: Gráfico */
+    .chart-panel {
+      justify-content: space-between;
+      gap: 16px;
+      position: relative;
+    }
+
+    .chart-header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+    }
+
+    .chart-title {
+      margin: 0 0 4px;
+      font-family: var(--font-display);
+      font-size: 1.1875rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--ink-primary);
+    }
+
+    .chart-subtitle {
+      margin: 0;
+      font-size: 0.8125rem;
+      color: var(--ink-secondary);
+    }
+
+    .chart-stage {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 270px;
+      width: 100%;
+    }
+
+    .chart-svg {
+      width: 100%;
+      height: 100%;
+      max-height: 310px;
+      overflow: visible;
+      display: block;
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      font-size: 0.8125rem;
+      color: var(--ink-secondary);
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-swatch {
+      width: 10px;
+      height: 10px;
+      flex-shrink: 0;
+    }
+
+    .chart-source {
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      margin: 0;
+    }
+
+    .chart-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background-color: var(--ink-primary);
+      color: #ffffff;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translate(-50%, -115%);
+      transition: opacity 120ms ease;
+      z-index: 10;
+    }
+
+    .chart-tooltip.is-visible {
+      opacity: 1;
+    }
+
+    .chart-image-wrap {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .chart-image-frame {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #121212;
+      border: 1px solid var(--border-strong);
+      cursor: zoom-in;
+      transition: opacity 150ms var(--ease-out);
+    }
+
+    .chart-image-frame:hover {
+      opacity: 0.94;
+    }
+
+    .chart-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .chart-image-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .chart-zoom-btn {
+      height: 32px;
+      padding: 0 12px;
+      font-size: 0.78rem;
+    }
+
+    .chart-fallback {
+      padding: 28px 18px;
+      text-align: center;
+      background-color: var(--bg-subtle);
+      color: var(--ink-secondary);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    /* Lightbox de gráfico ampliado */
+    .lightbox-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(18, 18, 18, 0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 70;
+    }
+
+    .lightbox-backdrop.is-open {
+      display: flex;
+    }
+
+    .lightbox-dialog {
+      width: 100%;
+      max-width: 1280px;
+      background-color: #121212;
+      border: 1px solid #44403c;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lightbox-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: #f5f5f4;
+    }
+
+    .lightbox-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 500;
+    }
+
+    .lightbox-close {
+      background-color: #292524;
+      color: #f5f5f4;
+      border-color: #57534e;
+    }
+
+    .lightbox-close:hover {
+      background-color: #44403c;
+    }
+
+    .lightbox-img {
+      display: block;
+      width: 100%;
+      max-height: 78vh;
+      object-fit: contain;
+      background-color: #121212;
+    }
+
+    /* Botones de flecha izquierda y derecha */
+    .nav-arrow {
+      position: absolute;
+      top: calc(50% + 28px);
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      background-color: var(--bg-surface);
+      border: 2px solid var(--border-strong);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out), transform 150ms var(--ease-out);
+      z-index: 5;
+    }
+
+    .nav-arrow:hover:not(:disabled) {
+      background-color: var(--ink-primary);
+      color: #ffffff;
+    }
+
+    .nav-arrow:active:not(:disabled) {
+      transform: translateY(-50%) scale(0.96);
+    }
+
+    .nav-arrow:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .nav-arrow--prev {
+      left: 0;
+    }
+
+    .nav-arrow--next {
+      right: 0;
+    }
+
+    .nav-arrow svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Barra inferior discreta de navegación y edición */
+    .controls-bar {
+      margin: 18px 64px 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 20px;
+      font-size: 0.8125rem;
+      color: var(--ink-secondary);
+    }
+
+    .slide-index-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .slide-steps {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .step-btn {
+      min-width: 34px;
+      height: 34px;
+      padding: 0 8px;
+      border: 1px solid var(--border-subtle);
+      background-color: transparent;
+      color: var(--ink-secondary);
+      cursor: pointer;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+    }
+
+    .step-btn:hover {
+      border-color: var(--ink-primary);
+      color: var(--ink-primary);
+    }
+
+    .step-btn.is-active {
+      background-color: var(--ink-primary);
+      border-color: var(--ink-primary);
+      color: #ffffff;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-action {
+      height: 36px;
+      padding: 0 14px;
+      border: 1px solid var(--border-strong);
+      background-color: var(--bg-surface);
+      color: var(--ink-primary);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 150ms ease, color 150ms ease;
+    }
+
+    .btn-action:hover {
+      background-color: var(--bg-subtle);
+    }
+
+    .btn-action--primary {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .btn-action--primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-action--danger {
+      border-color: var(--border-subtle);
+      color: var(--accent);
+    }
+
+    .status-note {
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* Modal de edición */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(28, 25, 23, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 50;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background-color: var(--bg-canvas);
+      border: 2px solid var(--border-strong);
+      width: 100%;
+      max-width: 720px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.375rem;
+      font-weight: 700;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--ink-primary);
+    }
+
+    .field-hint {
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      margin-top: 4px;
+    }
+
+    .field-input,
+    .field-textarea,
+    .field-select {
+      width: 100%;
+      padding: 10px 12px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      font-size: 0.9375rem;
+      line-height: 1.45;
+    }
+
+    .field-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .field-textarea--mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.84rem;
+      min-height: 104px;
+    }
+
+    .modal-footer {
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Interactividad de elementos SVG */
+    .chart-bar,
+    .chart-dot,
+    .chart-slice {
+      cursor: pointer;
+      transition: opacity 140ms ease;
+    }
+
+    .chart-bar:hover,
+    .chart-dot:hover,
+    .chart-slice:hover {
+      opacity: 0.82;
+    }
+
+    .chart-empty {
+      text-align: center;
+      color: var(--ink-muted);
+      font-size: 0.9rem;
+      padding: 24px;
+      border: 1px dashed var(--border-subtle);
+      width: 100%;
+    }
+
+    @media (max-width: 960px) {
+      .stage-wrapper {
+        padding: 0;
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        min-height: auto;
+        padding: 24px;
+      }
+
+      .nav-arrow {
+        position: static;
+        transform: none;
+      }
+
+      .nav-arrow:active:not(:disabled) {
+        transform: scale(0.96);
+      }
+
+      .mobile-nav-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 14px;
+      }
+
+      .controls-bar {
+        margin: 16px 0 0;
+      }
+    }
+
+    @media (min-width: 961px) {
+      .mobile-nav-row {
+        display: contents;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        padding: 18px 14px 28px;
+      }
+
+      .form-row-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .encabezado-box {
+        flex-direction: column;
+        gap: 4px;
+        padding: 14px 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide-frame,
+      .nav-arrow,
+      .chart-tooltip {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="main-header">
+      <h1 class="main-title">Asesinados en Gaza</h1>
+    </header>
+
+    <section class="stage-wrapper" aria-label="Presentación documental">
+      <div id="slide-frame" class="slide-frame" aria-live="polite">
+        <div class="encabezado-box">
+          <h2 id="encabezado-text" class="encabezado-text"></h2>
+        </div>
+
+        <div class="content-grid">
+          <article class="panel paragraph-panel">
+            <div>
+              <p id="paragraph-kicker" class="paragraph-kicker"></p>
+              <div id="paragraph-body" class="paragraph-body has-dropcap"></div>
+            </div>
+            <footer class="paragraph-footer">
+              <span id="paragraph-note"></span>
+              <span id="slide-counter-inline"></span>
+            </footer>
+          </article>
+
+          <aside class="panel chart-panel" aria-label="Gráfico estadístico">
+            <div class="chart-header">
+              <h3 id="chart-title" class="chart-title"></h3>
+              <p id="chart-subtitle" class="chart-subtitle"></p>
+            </div>
+
+            <div id="chart-stage" class="chart-stage">
+              <div id="chart-tooltip" class="chart-tooltip" role="status" aria-hidden="true"></div>
+            </div>
+
+            <div>
+              <div id="chart-legend" class="chart-legend"></div>
+              <p id="chart-source" class="chart-source"></p>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <div class="mobile-nav-row">
+        <button id="btn-prev" class="nav-arrow nav-arrow--prev" type="button" aria-label="Diapositiva anterior" title="Anterior (Flecha izquierda)">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M19 12H5"></path>
+            <path d="M12 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+
+        <button id="btn-next" class="nav-arrow nav-arrow--next" type="button" aria-label="Siguiente diapositiva" title="Siguiente (Flecha derecha)">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 12h14"></path>
+            <path d="M12 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <nav class="controls-bar" aria-label="Controles de diapositivas">
+      <div class="slide-index-group">
+        <span id="slide-counter"></span>
+        <div id="slide-steps" class="slide-steps" role="tablist" aria-label="Selector de diapositivas"></div>
+      </div>
+
+      <div class="toolbar-actions">
+        <span id="save-status" class="status-note" aria-live="polite"></span>
+        <button id="btn-edit" class="btn-action" type="button">Editar diapositiva</button>
+        <button id="btn-add" class="btn-action" type="button">Nueva diapositiva</button>
+        <button id="btn-download" class="btn-action btn-action--primary" type="button">Descargar HTML</button>
+      </div>
+    </nav>
+  </main>
+
+  <!-- Modal para editar contenido e insertar los textos/datos propios -->
+  <div id="edit-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 id="modal-title" class="modal-title">Editar diapositiva</h2>
+        <button id="btn-close-modal" class="btn-action" type="button" aria-label="Cerrar">Cerrar</button>
+      </div>
+
+      <form id="edit-form" class="form-grid">
+        <div>
+          <label class="field-label" for="input-encabezado">Encabezado</label>
+          <input id="input-encabezado" class="field-input" type="text" required />
+        </div>
+
+        <div class="form-row-2">
+          <div>
+            <label class="field-label" for="input-kicker">Sección / subtítulo del párrafo</label>
+            <input id="input-kicker" class="field-input" type="text" />
+          </div>
+          <div>
+            <label class="field-label" for="input-note">Nota al pie del párrafo</label>
+            <input id="input-note" class="field-input" type="text" />
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label" for="input-paragraph">Párrafo (separa párrafos con una línea en blanco)</label>
+          <textarea id="input-paragraph" class="field-textarea" required></textarea>
+        </div>
+
+        <div class="form-row-2">
+          <div>
+            <label class="field-label" for="input-chart-title">Título del gráfico</label>
+            <input id="input-chart-title" class="field-input" type="text" />
+          </div>
+          <div>
+            <label class="field-label" for="input-chart-type">Tipo de gráfico</label>
+            <select id="input-chart-type" class="field-select">
+              <option value="image">Imagen adjunta (ruta o URL)</option>
+              <option value="bar">Barras verticales</option>
+              <option value="horizontalBar">Barras horizontales</option>
+              <option value="line">Línea temporal</option>
+              <option value="donut">Distribución proporcional</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div>
+            <label class="field-label" for="input-chart-subtitle">Subtítulo / unidad</label>
+            <input id="input-chart-subtitle" class="field-input" type="text" />
+          </div>
+          <div>
+            <label class="field-label" for="input-chart-source">Fuente del gráfico</label>
+            <input id="input-chart-source" class="field-input" type="text" />
+          </div>
+        </div>
+
+        <div id="chart-image-group" style="display:none;">
+          <label class="field-label" for="input-chart-image">Ruta o URL de la imagen del gráfico</label>
+          <input id="input-chart-image" class="field-input" type="text" placeholder="/assets/aistudio/grafico__3__70b5b78c.jpg" />
+        </div>
+
+        <div id="chart-data-group">
+          <label class="field-label" for="input-chart-data">Datos del gráfico (una línea por categoría: Etiqueta, Valor)</label>
+          <textarea id="input-chart-data" class="field-textarea field-textarea--mono" placeholder="Categoría A, 120&#10;Categoría B, 85"></textarea>
+          <p class="field-hint">Ejemplo: <code>Enero, 450</code>. Puedes usar decimales con punto.</p>
+        </div>
+
+        <div class="modal-footer">
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button id="btn-delete-slide" class="btn-action btn-action--danger" type="button">Eliminar diapositiva</button>
+            <button id="btn-reset-all" class="btn-action" type="button">Restablecer plantilla</button>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button id="btn-cancel-modal" class="btn-action" type="button">Cancelar</button>
+            <button class="btn-action btn-action--primary" type="submit">Guardar cambios</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Lightbox para ver el gráfico a pantalla completa -->
+  <div id="chart-lightbox" class="lightbox-backdrop" role="dialog" aria-modal="true" aria-labelledby="lightbox-title">
+    <div class="lightbox-dialog">
+      <div class="lightbox-header">
+        <h2 id="lightbox-title" class="lightbox-title"></h2>
+        <button id="btn-close-lightbox" class="btn-action lightbox-close" type="button">Cerrar</button>
+      </div>
+      <img id="lightbox-img" class="lightbox-img" src="" alt="" referrerpolicy="no-referrer" />
+    </div>
+  </div>
+
+  <!-- Datos editables integrados directamente en el HTML -->
+  <script id="slides-data" type="application/json">
+[
+  {
+    "encabezado": "Tres años después del inicio de la guerra en Gaza, las víctimas fatales producto de ataques armados sigue creciendo. Este reportaje aborda las muertes que se relacionan con la natalidad, considerando mujeres en edad fértil y niños menores de dos años que no conocieron otra realidad fuera del conflicto.",
+    "kicker": "01 · Crisis sanitaria y natalidad",
+    "paragraph": "Desde octubre de 2023, la población palestina de Gaza se ha enfrentado a una crisis humanitaria marcada por la muerte de civiles, el desplazamiento forzado, la destrucción de viviendas y el colapso progresivo de servicios básicos. El sistema de salud de Gaza constituye una de las dimensiones centrales de esta problemática. La destrucción y el deterioro de los hospitales, la falta de medicamentos e insumos, las dificultades para acceder a la atención prenatal y obstétrica y la escasez de equipamiento neonatal han alterado las condiciones habituales de atención.",
+    "note": "Referencia bibliográfica: Fleury, M., & Labrecque, É. V. (2026)",
+    "chart": {
+      "title": "Cada punto representa a un bebé de 0 a 1 año",
+      "subtitle": "Bebés fallecidos según fecha de publicación de la actualización",
+      "type": "image",
+      "imageUrl": "/assets/aistudio/grafico__3__70b5b78c.jpg",
+      "source": "Fleury, M., & Labrecque, É. V. (2026) · Haz clic en la imagen para ampliarla",
+      "data": []
+    }
+  },
+  {
+    "encabezado": "(Aquí va el texto que adjuntaré como encabezado — Diapositiva 2)",
+    "kicker": "02 · Evolución temporal (Texto de ejemplo editable)",
+    "paragraph": "Segunda lámina destinada a describir la evolución cronológica o el desarrollo de los acontecimientos.\n\nEl panel derecho incorpora un gráfico de línea temporal en SVG puro, con tooltips interactivos al pasar el cursor sobre cada punto de medición.",
+    "note": "Nota: serie temporal de muestra",
+    "chart": {
+      "title": "Gráfico 2 — Tendencia en el período",
+      "subtitle": "Serie mensual de ejemplo (valores editables)",
+      "type": "line",
+      "source": "Fuente: Espacio reservado para fuente documental",
+      "data": [
+        { "label": "Mes 1", "value": 180 },
+        { "label": "Mes 2", "value": 310 },
+        { "label": "Mes 3", "value": 490 },
+        { "label": "Mes 4", "value": 430 },
+        { "label": "Mes 5", "value": 610 },
+        { "label": "Mes 6", "value": 740 }
+      ]
+    }
+  },
+  {
+    "encabezado": "(Aquí va el texto que adjuntaré como encabezado — Diapositiva 3)",
+    "kicker": "03 · Distribución proporcional (Texto de ejemplo editable)",
+    "paragraph": "Tercera lámina pensada para desglosar proporciones, grupos demográficos o categorías principales dentro del análisis.\n\nCuando edites los datos desde el botón inferior o descargues el archivo HTML, tus cambios quedarán guardados dentro del único archivo index.html.",
+    "note": "Nota: distribución de muestra",
+    "chart": {
+      "title": "Gráfico 3 — Composición porcentual",
+      "subtitle": "Distribución por grupo (valores editables)",
+      "type": "donut",
+      "source": "Fuente: Espacio reservado para fuente documental",
+      "data": [
+        { "label": "Grupo 1", "value": 45 },
+        { "label": "Grupo 2", "value": 30 },
+        { "label": "Grupo 3", "value": 15 },
+        { "label": "Grupo 4", "value": 10 }
+      ]
+    }
+  },
+  {
+    "encabezado": "(Aquí va el texto que adjuntaré como encabezado — Diapositiva 4)",
+    "kicker": "04 · Síntesis comparativa (Texto de ejemplo editable)",
+    "paragraph": "Cuarta lámina para conclusiones, comparativas regionales o notas metodológicas del registro.\n\nPuedes agregar nuevas diapositivas, reescribir cualquiera de las existentes y exportar el documento final listo para abrirse directamente en cualquier navegador sin internet ni compilación.",
+    "note": "Nota: cierre de presentación editable",
+    "chart": {
+      "title": "Gráfico 4 — Desglose comparativo",
+      "subtitle": "Barras horizontales de ejemplo (unidades)",
+      "type": "horizontalBar",
+      "source": "Fuente: Espacio reservado para fuente documental",
+      "data": [
+        { "label": "Zona Norte", "value": 540 },
+        { "label": "Zona Centro", "value": 410 },
+        { "label": "Zona Sur", "value": 620 },
+        { "label": "Otras áreas", "value": 215 }
+      ]
+    }
+  }
+]
+  </script>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var STORAGE_KEY = "asesinados_en_gaza_slides_v1";
+      var PALETTE = ["#1c1917", "#881337", "#78716c", "#b45309", "#44403c", "#57534e"];
+
+      var rawInitialJson = "";
+      var initialSlides = [];
+      try {
+        rawInitialJson = document.getElementById("slides-data").textContent.trim();
+        initialSlides = JSON.parse(rawInitialJson);
+      } catch (e) {
+        initialSlides = [];
+      }
+
+      function hashString(str) {
+        var h = 2166136261;
+        for (var i = 0; i < str.length; i++) {
+          h ^= str.charCodeAt(i);
+          h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
+        }
+        return String(h >>> 0);
+      }
+
+      var embeddedHash = hashString(rawInitialJson);
+
+      function cloneSlides(list) {
+        return JSON.parse(JSON.stringify(list));
+      }
+
+      function loadSlides() {
+        try {
+          var saved = localStorage.getItem(STORAGE_KEY);
+          if (saved) {
+            var parsed = JSON.parse(saved);
+            if (parsed && parsed.hash === embeddedHash && Array.isArray(parsed.slides) && parsed.slides.length > 0) {
+              return parsed.slides;
+            }
+          }
+        } catch (err) {
+          // Si localStorage no está disponible en file:// restringido, usa los datos embebidos.
+        }
+        return cloneSlides(initialSlides);
+      }
+
+      function persistSlides(list) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            hash: embeddedHash,
+            slides: list
+          }));
+        } catch (err) {
+          // Silencioso si el navegador bloquea almacenamiento local.
+        }
+      }
+
+      var slides = loadSlides();
+      var currentIndex = 0;
+
+      // Referencias DOM
+      var slideFrame = document.getElementById("slide-frame");
+      var encabezadoEl = document.getElementById("encabezado-text");
+      var kickerEl = document.getElementById("paragraph-kicker");
+      var bodyEl = document.getElementById("paragraph-body");
+      var noteEl = document.getElementById("paragraph-note");
+      var counterInlineEl = document.getElementById("slide-counter-inline");
+      var chartTitleEl = document.getElementById("chart-title");
+      var chartSubtitleEl = document.getElementById("chart-subtitle");
+      var chartStageEl = document.getElementById("chart-stage");
+      var chartTooltipEl = document.getElementById("chart-tooltip");
+      var chartLegendEl = document.getElementById("chart-legend");
+      var chartSourceEl = document.getElementById("chart-source");
+      var counterEl = document.getElementById("slide-counter");
+      var stepsEl = document.getElementById("slide-steps");
+      var btnPrev = document.getElementById("btn-prev");
+      var btnNext = document.getElementById("btn-next");
+      var btnEdit = document.getElementById("btn-edit");
+      var btnAdd = document.getElementById("btn-add");
+      var btnDownload = document.getElementById("btn-download");
+      var saveStatusEl = document.getElementById("save-status");
+
+      // Modal
+      var editModal = document.getElementById("edit-modal");
+      var editForm = document.getElementById("edit-form");
+      var btnCloseModal = document.getElementById("btn-close-modal");
+      var btnCancelModal = document.getElementById("btn-cancel-modal");
+      var btnDeleteSlide = document.getElementById("btn-delete-slide");
+      var btnResetAll = document.getElementById("btn-reset-all");
+
+      var inputEncabezado = document.getElementById("input-encabezado");
+      var inputKicker = document.getElementById("input-kicker");
+      var inputNote = document.getElementById("input-note");
+      var inputParagraph = document.getElementById("input-paragraph");
+      var inputChartTitle = document.getElementById("input-chart-title");
+      var inputChartType = document.getElementById("input-chart-type");
+      var inputChartSubtitle = document.getElementById("input-chart-subtitle");
+      var inputChartSource = document.getElementById("input-chart-source");
+      var inputChartImage = document.getElementById("input-chart-image");
+      var inputChartData = document.getElementById("input-chart-data");
+      var chartImageGroup = document.getElementById("chart-image-group");
+      var chartDataGroup = document.getElementById("chart-data-group");
+
+      // Lightbox
+      var chartLightbox = document.getElementById("chart-lightbox");
+      var lightboxTitle = document.getElementById("lightbox-title");
+      var lightboxImg = document.getElementById("lightbox-img");
+      var btnCloseLightbox = document.getElementById("btn-close-lightbox");
+
+      var resetArmed = false;
+
+      function formatNumber(n) {
+        return Number(n).toLocaleString("es-ES", { maximumFractionDigits: 2 });
+      }
+
+      function createSvgEl(tag, attrs) {
+        var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+        if (attrs) {
+          Object.keys(attrs).forEach(function (key) {
+            el.setAttribute(key, String(attrs[key]));
+          });
+        }
+        return el;
+      }
+
+      function showTooltip(text, clientX, clientY) {
+        var rect = chartStageEl.getBoundingClientRect();
+        chartTooltipEl.textContent = text;
+        chartTooltipEl.style.left = (clientX - rect.left) + "px";
+        chartTooltipEl.style.top = (clientY - rect.top) + "px";
+        chartTooltipEl.classList.add("is-visible");
+      }
+
+      function hideTooltip() {
+        chartTooltipEl.classList.remove("is-visible");
+      }
+
+      function attachTooltip(el, text) {
+        el.addEventListener("mousemove", function (e) {
+          showTooltip(text, e.clientX, e.clientY);
+        });
+        el.addEventListener("mouseleave", hideTooltip);
+        el.addEventListener("focus", function () {
+          var r = el.getBoundingClientRect();
+          showTooltip(text, r.left + r.width / 2, r.top);
+        });
+        el.addEventListener("blur", hideTooltip);
+      }
+
+      function renderChart(chart) {
+        // Limpiar SVG anterior manteniendo el tooltip
+        Array.prototype.slice.call(chartStageEl.children).forEach(function (child) {
+          if (child !== chartTooltipEl) {
+            chartStageEl.removeChild(child);
+          }
+        });
+        chartLegendEl.innerHTML = "";
+        hideTooltip();
+
+        chartTitleEl.textContent = (chart && chart.title) ? chart.title : "Gráfico";
+        chartSubtitleEl.textContent = (chart && chart.subtitle) ? chart.subtitle : "";
+        chartSourceEl.textContent = (chart && chart.source) ? chart.source : "";
+
+        var type = (chart && chart.type) || "bar";
+
+        if (type === "image") {
+          var imgSrc = (chart && chart.imageUrl) ? chart.imageUrl : "";
+          if (!imgSrc) {
+            var emptyImg = document.createElement("div");
+            emptyImg.className = "chart-empty";
+            emptyImg.textContent = "Sin imagen configurada. Usa «Editar diapositiva» para ingresar la ruta o URL.";
+            chartStageEl.appendChild(emptyImg);
+            return;
+          }
+
+          var wrap = document.createElement("div");
+          wrap.className = "chart-image-wrap";
+
+          var frameBtn = document.createElement("button");
+          frameBtn.type = "button";
+          frameBtn.className = "chart-image-frame";
+          frameBtn.setAttribute("aria-label", "Ampliar gráfico: " + chartTitleEl.textContent);
+
+          var img = document.createElement("img");
+          img.className = "chart-image";
+          img.src = imgSrc;
+          img.alt = chartTitleEl.textContent + (chartSubtitleEl.textContent ? " — " + chartSubtitleEl.textContent : "");
+          img.setAttribute("referrerpolicy", "no-referrer");
+
+          img.addEventListener("error", function () {
+            frameBtn.style.display = "none";
+            var fallback = document.createElement("div");
+            fallback.className = "chart-fallback";
+            fallback.textContent = "No se pudo cargar la imagen del gráfico (" + imgSrc + ").";
+            wrap.insertBefore(fallback, actions);
+          });
+
+          frameBtn.appendChild(img);
+          frameBtn.addEventListener("click", function () {
+            openLightbox(imgSrc, chartTitleEl.textContent, img.alt);
+          });
+
+          var actions = document.createElement("div");
+          actions.className = "chart-image-actions";
+          var zoomBtn = document.createElement("button");
+          zoomBtn.type = "button";
+          zoomBtn.className = "btn-action chart-zoom-btn";
+          zoomBtn.textContent = "Ampliar gráfico";
+          zoomBtn.addEventListener("click", function () {
+            openLightbox(imgSrc, chartTitleEl.textContent, img.alt);
+          });
+          actions.appendChild(zoomBtn);
+
+          wrap.appendChild(frameBtn);
+          wrap.appendChild(actions);
+          chartStageEl.appendChild(wrap);
+          return;
+        }
+
+        var data = (chart && Array.isArray(chart.data)) ? chart.data.filter(function (d) {
+          return d && typeof d.label === "string" && !isNaN(Number(d.value));
+        }) : [];
+
+        if (data.length === 0) {
+          var empty = document.createElement("div");
+          empty.className = "chart-empty";
+          empty.textContent = "Sin datos en este gráfico. Usa «Editar diapositiva» para ingresar categorías y valores.";
+          chartStageEl.appendChild(empty);
+          return;
+        }
+
+        var W = 440;
+        var H = 270;
+        var svg = createSvgEl("svg", {
+          viewBox: "0 0 " + W + " " + H,
+          class: "chart-svg",
+          role: "img",
+          "aria-label": chartTitleEl.textContent
+        });
+
+        var maxVal = Math.max.apply(null, data.map(function (d) { return Math.max(0, Number(d.value)); }));
+        if (maxVal === 0) maxVal = 1;
+
+        if (type === "bar") {
+          var pad = { top: 22, right: 16, bottom: 42, left: 48 };
+          var plotW = W - pad.left - pad.right;
+          var plotH = H - pad.top - pad.bottom;
+
+          // Líneas guía horizontales
+          for (var i = 0; i <= 4; i++) {
+            var val = (maxVal / 4) * i;
+            var y = pad.top + plotH - (plotH * i) / 4;
+            svg.appendChild(createSvgEl("line", {
+              x1: pad.left,
+              x2: W - pad.right,
+              y1: y,
+              y2: y,
+              stroke: i === 0 ? "#1c1917" : "#e7e1d6",
+              "stroke-width": i === 0 ? 1.5 : 1
+            }));
+            var tick = createSvgEl("text", {
+              x: pad.left - 8,
+              y: y + 4,
+              "text-anchor": "end",
+              "font-size": "11",
+              fill: "#78716c"
+            });
+            tick.textContent = formatNumber(Math.round(val));
+            svg.appendChild(tick);
+          }
+
+          var slotW = plotW / data.length;
+          var barW = Math.min(54, slotW * 0.58);
+
+          data.forEach(function (d, idx) {
+            var v = Math.max(0, Number(d.value));
+            var bh = (v / maxVal) * plotH;
+            var bx = pad.left + idx * slotW + (slotW - barW) / 2;
+            var by = pad.top + plotH - bh;
+            var color = idx === 1 ? "#881337" : "#1c1917";
+
+            var rect = createSvgEl("rect", {
+              x: bx,
+              y: by,
+              width: barW,
+              height: Math.max(2, bh),
+              fill: color,
+              class: "chart-bar",
+              tabindex: "0"
+            });
+            attachTooltip(rect, d.label + ": " + formatNumber(v));
+            svg.appendChild(rect);
+
+            var valLabel = createSvgEl("text", {
+              x: bx + barW / 2,
+              y: Math.max(12, by - 6),
+              "text-anchor": "middle",
+              "font-size": "11",
+              "font-weight": "600",
+              fill: "#1c1917"
+            });
+            valLabel.textContent = formatNumber(v);
+            svg.appendChild(valLabel);
+
+            var xLabel = createSvgEl("text", {
+              x: bx + barW / 2,
+              y: H - 18,
+              "text-anchor": "middle",
+              "font-size": "11.5",
+              fill: "#57534e"
+            });
+            xLabel.textContent = d.label.length > 12 ? d.label.slice(0, 11) + "…" : d.label;
+            svg.appendChild(xLabel);
+          });
+        } else if (type === "horizontalBar") {
+          var hPad = { top: 14, right: 48, bottom: 24, left: 108 };
+          var hPlotW = W - hPad.left - hPad.right;
+          var hPlotH = H - hPad.top - hPad.bottom;
+          var rowH = hPlotH / data.length;
+          var hBar = Math.min(28, rowH * 0.56);
+
+          svg.appendChild(createSvgEl("line", {
+            x1: hPad.left,
+            x2: hPad.left,
+            y1: hPad.top,
+            y2: H - hPad.bottom,
+            stroke: "#1c1917",
+            "stroke-width": 1.5
+          }));
+
+          data.forEach(function (d, idx) {
+            var v = Math.max(0, Number(d.value));
+            var bw = (v / maxVal) * hPlotW;
+            var by = hPad.top + idx * rowH + (rowH - hBar) / 2;
+            var color = idx === 0 ? "#881337" : "#1c1917";
+
+            var lbl = createSvgEl("text", {
+              x: hPad.left - 10,
+              y: by + hBar / 2 + 4,
+              "text-anchor": "end",
+              "font-size": "12",
+              fill: "#1c1917"
+            });
+            lbl.textContent = d.label.length > 14 ? d.label.slice(0, 13) + "…" : d.label;
+            svg.appendChild(lbl);
+
+            var rect = createSvgEl("rect", {
+              x: hPad.left,
+              y: by,
+              width: Math.max(2, bw),
+              height: hBar,
+              fill: color,
+              class: "chart-bar",
+              tabindex: "0"
+            });
+            attachTooltip(rect, d.label + ": " + formatNumber(v));
+            svg.appendChild(rect);
+
+            var num = createSvgEl("text", {
+              x: hPad.left + bw + 8,
+              y: by + hBar / 2 + 4,
+              "font-size": "11.5",
+              "font-weight": "600",
+              fill: "#1c1917"
+            });
+            num.textContent = formatNumber(v);
+            svg.appendChild(num);
+          });
+        } else if (type === "line") {
+          var lPad = { top: 22, right: 20, bottom: 40, left: 48 };
+          var lPlotW = W - lPad.left - lPad.right;
+          var lPlotH = H - lPad.top - lPad.bottom;
+
+          for (var j = 0; j <= 4; j++) {
+            var lVal = (maxVal / 4) * j;
+            var ly = lPad.top + lPlotH - (lPlotH * j) / 4;
+            svg.appendChild(createSvgEl("line", {
+              x1: lPad.left,
+              x2: W - lPad.right,
+              y1: ly,
+              y2: ly,
+              stroke: j === 0 ? "#1c1917" : "#e7e1d6",
+              "stroke-width": j === 0 ? 1.5 : 1
+            }));
+            var lTick = createSvgEl("text", {
+              x: lPad.left - 8,
+              y: ly + 4,
+              "text-anchor": "end",
+              "font-size": "11",
+              fill: "#78716c"
+            });
+            lTick.textContent = formatNumber(Math.round(lVal));
+            svg.appendChild(lTick);
+          }
+
+          var stepX = data.length > 1 ? lPlotW / (data.length - 1) : 0;
+          var points = data.map(function (d, idx) {
+            var v = Math.max(0, Number(d.value));
+            var px = data.length > 1 ? lPad.left + idx * stepX : lPad.left + lPlotW / 2;
+            var py = lPad.top + lPlotH - (v / maxVal) * lPlotH;
+            return { x: px, y: py, label: d.label, value: v };
+          });
+
+          if (points.length > 1) {
+            var areaPath = "M " + points[0].x + " " + (lPad.top + lPlotH) + " ";
+            points.forEach(function (p) { areaPath += "L " + p.x + " " + p.y + " "; });
+            areaPath += "L " + points[points.length - 1].x + " " + (lPad.top + lPlotH) + " Z";
+            svg.appendChild(createSvgEl("path", {
+              d: areaPath,
+              fill: "rgba(136, 19, 55, 0.1)"
+            }));
+
+            var linePath = points.map(function (p, idx) {
+              return (idx === 0 ? "M " : "L ") + p.x + " " + p.y;
+            }).join(" ");
+            svg.appendChild(createSvgEl("path", {
+              d: linePath,
+              fill: "none",
+              stroke: "#881337",
+              "stroke-width": "2.5"
+            }));
+          }
+
+          points.forEach(function (p) {
+            var dot = createSvgEl("circle", {
+              cx: p.x,
+              cy: p.y,
+              r: "5",
+              fill: "#ffffff",
+              stroke: "#881337",
+              "stroke-width": "2.5",
+              class: "chart-dot",
+              tabindex: "0"
+            });
+            attachTooltip(dot, p.label + ": " + formatNumber(p.value));
+            svg.appendChild(dot);
+
+            var xl = createSvgEl("text", {
+              x: p.x,
+              y: H - 16,
+              "text-anchor": "middle",
+              "font-size": "11",
+              fill: "#57534e"
+            });
+            xl.textContent = p.label.length > 9 ? p.label.slice(0, 8) + "…" : p.label;
+            svg.appendChild(xl);
+          });
+        } else if (type === "donut") {
+          var total = data.reduce(function (acc, d) { return acc + Math.max(0, Number(d.value)); }, 0);
+          if (total <= 0) total = 1;
+          var cx = W / 2;
+          var cy = H / 2;
+          var radius = 84;
+          var innerR = 48;
+          var startAngle = -Math.PI / 2;
+
+          data.forEach(function (d, idx) {
+            var v = Math.max(0, Number(d.value));
+            var sliceAngle = (v / total) * Math.PI * 2;
+            var endAngle = startAngle + sliceAngle;
+            var largeArc = sliceAngle > Math.PI ? 1 : 0;
+
+            var x1 = cx + radius * Math.cos(startAngle);
+            var y1 = cy + radius * Math.sin(startAngle);
+            var x2 = cx + radius * Math.cos(endAngle);
+            var y2 = cy + radius * Math.sin(endAngle);
+
+            var ix1 = cx + innerR * Math.cos(endAngle);
+            var iy1 = cy + innerR * Math.sin(endAngle);
+            var ix2 = cx + innerR * Math.cos(startAngle);
+            var iy2 = cy + innerR * Math.sin(startAngle);
+
+            var pathData;
+            if (data.length === 1) {
+              // Círculo completo si hay un solo dato
+              pathData = [
+                "M", cx, cy - radius,
+                "A", radius, radius, 0, 1, 1, cx - 0.01, cy - radius,
+                "L", cx - 0.01, cy - innerR,
+                "A", innerR, innerR, 0, 1, 0, cx, cy - innerR,
+                "Z"
+              ].join(" ");
+            } else {
+              pathData = [
+                "M", x1, y1,
+                "A", radius, radius, 0, largeArc, 1, x2, y2,
+                "L", ix1, iy1,
+                "A", innerR, innerR, 0, largeArc, 0, ix2, iy2,
+                "Z"
+              ].join(" ");
+            }
+
+            var color = PALETTE[idx % PALETTE.length];
+            var slice = createSvgEl("path", {
+              d: pathData,
+              fill: color,
+              stroke: "#ffffff",
+              "stroke-width": "2",
+              class: "chart-slice",
+              tabindex: "0"
+            });
+            var pct = Math.round((v / total) * 1000) / 10;
+            attachTooltip(slice, d.label + ": " + formatNumber(v) + " (" + pct + "%)");
+            svg.appendChild(slice);
+
+            // Leyenda tabular
+            var item = document.createElement("span");
+            item.className = "legend-item";
+            var sw = document.createElement("span");
+            sw.className = "legend-swatch";
+            sw.style.backgroundColor = color;
+            var txt = document.createElement("span");
+            txt.textContent = d.label + ": " + formatNumber(v) + " (" + pct + "%)";
+            item.appendChild(sw);
+            item.appendChild(txt);
+            chartLegendEl.appendChild(item);
+
+            startAngle = endAngle;
+          });
+
+          var centerText = createSvgEl("text", {
+            x: cx,
+            y: cy + 5,
+            "text-anchor": "middle",
+            "font-size": "15",
+            "font-weight": "700",
+            fill: "#1c1917"
+          });
+          centerText.textContent = formatNumber(total);
+          svg.appendChild(centerText);
+        }
+
+        chartStageEl.appendChild(svg);
+      }
+
+      function renderSlide(animate) {
+        if (slides.length === 0) return;
+        if (currentIndex < 0) currentIndex = 0;
+        if (currentIndex >= slides.length) currentIndex = slides.length - 1;
+
+        var slide = slides[currentIndex];
+
+        var applyContent = function () {
+          encabezadoEl.textContent = slide.encabezado || "(Sin encabezado)";
+          kickerEl.textContent = slide.kicker || ("Diapositiva " + (currentIndex + 1));
+
+          bodyEl.innerHTML = "";
+          var paragraphs = String(slide.paragraph || "").split(/\n\s*\n/).filter(Boolean);
+          if (paragraphs.length === 0) {
+            var pEmpty = document.createElement("p");
+            pEmpty.textContent = "(Sin contenido de párrafo)";
+            bodyEl.appendChild(pEmpty);
+          } else {
+            paragraphs.forEach(function (text) {
+              var p = document.createElement("p");
+              p.textContent = text.trim();
+              bodyEl.appendChild(p);
+            });
+          }
+
+          noteEl.textContent = slide.note || "";
+          counterInlineEl.textContent = (currentIndex + 1) + " / " + slides.length;
+          counterEl.textContent = "Diapositiva " + (currentIndex + 1) + " de " + slides.length;
+
+          renderChart(slide.chart);
+
+          // Actualizar botones de pasos
+          stepsEl.innerHTML = "";
+          slides.forEach(function (_, idx) {
+            var btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "step-btn" + (idx === currentIndex ? " is-active" : "");
+            btn.setAttribute("role", "tab");
+            btn.setAttribute("aria-selected", idx === currentIndex ? "true" : "false");
+            btn.textContent = String(idx + 1).padStart(2, "0");
+            btn.title = "Ir a diapositiva " + (idx + 1);
+            btn.addEventListener("click", function () {
+              goToSlide(idx);
+            });
+            stepsEl.appendChild(btn);
+          });
+
+          btnPrev.disabled = currentIndex === 0;
+          btnNext.disabled = currentIndex === slides.length - 1;
+        };
+
+        if (animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          slideFrame.classList.add("is-transitioning");
+          setTimeout(function () {
+            applyContent();
+            slideFrame.classList.remove("is-transitioning");
+          }, 90);
+        } else {
+          applyContent();
+        }
+      }
+
+      function goToSlide(index) {
+        if (index < 0 || index >= slides.length || index === currentIndex) return;
+        currentIndex = index;
+        renderSlide(true);
+      }
+
+      btnPrev.addEventListener("click", function () {
+        goToSlide(currentIndex - 1);
+      });
+
+      btnNext.addEventListener("click", function () {
+        goToSlide(currentIndex + 1);
+      });
+
+      function openLightbox(src, title, altText) {
+        lightboxTitle.textContent = title || "Gráfico";
+        lightboxImg.src = src;
+        lightboxImg.alt = altText || title || "Gráfico ampliado";
+        chartLightbox.classList.add("is-open");
+        btnCloseLightbox.focus();
+      }
+
+      function closeLightbox() {
+        chartLightbox.classList.remove("is-open");
+      }
+
+      btnCloseLightbox.addEventListener("click", closeLightbox);
+      chartLightbox.addEventListener("click", function (e) {
+        if (e.target === chartLightbox) closeLightbox();
+      });
+
+      // Navegación por teclado
+      document.addEventListener("keydown", function (e) {
+        if (chartLightbox.classList.contains("is-open")) {
+          if (e.key === "Escape") closeLightbox();
+          return;
+        }
+        if (editModal.classList.contains("is-open")) {
+          if (e.key === "Escape") closeModal();
+          return;
+        }
+        if (e.key === "ArrowLeft") {
+          goToSlide(currentIndex - 1);
+        } else if (e.key === "ArrowRight") {
+          goToSlide(currentIndex + 1);
+        }
+      });
+
+      function syncChartEditorFields() {
+        var isImage = inputChartType.value === "image";
+        chartImageGroup.style.display = isImage ? "block" : "none";
+        chartDataGroup.style.display = isImage ? "none" : "block";
+      }
+
+      inputChartType.addEventListener("change", syncChartEditorFields);
+
+      // Modal de edición
+      function openModal() {
+        var slide = slides[currentIndex];
+        inputEncabezado.value = slide.encabezado || "";
+        inputKicker.value = slide.kicker || "";
+        inputNote.value = slide.note || "";
+        inputParagraph.value = slide.paragraph || "";
+        inputChartTitle.value = (slide.chart && slide.chart.title) || "";
+        inputChartType.value = (slide.chart && slide.chart.type) || "bar";
+        inputChartSubtitle.value = (slide.chart && slide.chart.subtitle) || "";
+        inputChartSource.value = (slide.chart && slide.chart.source) || "";
+        inputChartImage.value = (slide.chart && slide.chart.imageUrl) || "";
+        inputChartData.value = ((slide.chart && slide.chart.data) || [])
+          .map(function (d) { return d.label + ", " + d.value; })
+          .join("\n");
+
+        syncChartEditorFields();
+        btnDeleteSlide.disabled = slides.length <= 1;
+        resetArmed = false;
+        btnResetAll.textContent = "Restablecer plantilla";
+        editModal.classList.add("is-open");
+        inputEncabezado.focus();
+      }
+
+      function closeModal() {
+        editModal.classList.remove("is-open");
+      }
+
+      function notifySaved(msg) {
+        saveStatusEl.textContent = msg;
+        setTimeout(function () {
+          if (saveStatusEl.textContent === msg) {
+            saveStatusEl.textContent = "";
+          }
+        }, 3000);
+      }
+
+      btnEdit.addEventListener("click", openModal);
+      btnCloseModal.addEventListener("click", closeModal);
+      btnCancelModal.addEventListener("click", closeModal);
+
+      editModal.addEventListener("click", function (e) {
+        if (e.target === editModal) closeModal();
+      });
+
+      editForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var parsedData = inputChartData.value
+          .split(/\r?\n/)
+          .map(function (line) { return line.trim(); })
+          .filter(Boolean)
+          .map(function (line) {
+            var idx = line.lastIndexOf(",");
+            if (idx === -1) return null;
+            var label = line.slice(0, idx).trim();
+            var value = parseFloat(line.slice(idx + 1).trim());
+            if (!label || isNaN(value)) return null;
+            return { label: label, value: value };
+          })
+          .filter(Boolean);
+
+        slides[currentIndex] = {
+          encabezado: inputEncabezado.value.trim(),
+          kicker: inputKicker.value.trim(),
+          note: inputNote.value.trim(),
+          paragraph: inputParagraph.value.trim(),
+          chart: {
+            title: inputChartTitle.value.trim(),
+            type: inputChartType.value,
+            subtitle: inputChartSubtitle.value.trim(),
+            source: inputChartSource.value.trim(),
+            imageUrl: inputChartImage.value.trim(),
+            data: parsedData
+          }
+        };
+
+        persistSlides(slides);
+        renderSlide(false);
+        closeModal();
+        notifySaved("Cambios guardados");
+      });
+
+      btnAdd.addEventListener("click", function () {
+        var n = slides.length + 1;
+        slides.push({
+          encabezado: "(Aquí va el texto que adjuntaré como encabezado — Diapositiva " + n + ")",
+          kicker: String(n).padStart(2, "0") + " · Nueva sección",
+          paragraph: "Escribe o pega aquí el párrafo correspondiente a esta nueva diapositiva.",
+          note: "",
+          chart: {
+            title: "Gráfico " + n,
+            subtitle: "Valores editables",
+            type: "bar",
+            source: "",
+            data: [
+              { label: "Categoría 1", value: 100 },
+              { label: "Categoría 2", value: 150 },
+              { label: "Categoría 3", value: 80 }
+            ]
+          }
+        });
+        currentIndex = slides.length - 1;
+        persistSlides(slides);
+        renderSlide(true);
+        openModal();
+      });
+
+      btnDeleteSlide.addEventListener("click", function () {
+        if (slides.length <= 1) return;
+        slides.splice(currentIndex, 1);
+        if (currentIndex >= slides.length) currentIndex = slides.length - 1;
+        persistSlides(slides);
+        renderSlide(false);
+        closeModal();
+        notifySaved("Diapositiva eliminada");
+      });
+
+      btnResetAll.addEventListener("click", function () {
+        if (!resetArmed) {
+          resetArmed = true;
+          btnResetAll.textContent = "Confirmar restablecimiento";
+          return;
+        }
+        slides = cloneSlides(initialSlides);
+        currentIndex = 0;
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch (err) {}
+        renderSlide(false);
+        closeModal();
+        notifySaved("Plantilla restablecida");
+      });
+
+      // Descarga un único archivo index.html con los datos actuales embebidos
+      btnDownload.addEventListener("click", function () {
+        var docClone = document.documentElement.cloneNode(true);
+        var dataNode = docClone.querySelector("#slides-data");
+        if (dataNode) {
+          dataNode.textContent = "\n" + JSON.stringify(slides, null, 2).replace(/<\//g, "<\\/") + "\n  ";
+        }
+        // Limpiar estado transitorio del modal o tooltips antes de exportar
+        var modalNode = docClone.querySelector("#edit-modal");
+        if (modalNode) modalNode.classList.remove("is-open");
+        var statusNode = docClone.querySelector("#save-status");
+        if (statusNode) statusNode.textContent = "";
+
+        var html = "<!DOCTYPE html>\n" + docClone.outerHTML;
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = "index.html";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        notifySaved("Archivo index.html descargado");
+      });
+
+      // Inicializar
+      renderSlide(false);
+    })();
+  </script>
+</body>
+</html>
